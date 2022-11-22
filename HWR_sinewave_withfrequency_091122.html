@@ -1,0 +1,227 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HWR_sinewave_withfrequency_091122</title><meta name="generator" content="MATLAB 9.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-11-22"><meta name="DC.source" content="HWR_sinewave_withfrequency_091122.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">n = input(<span class="string">"Enter pump amount:"</span>);
+f=1; <span class="comment">%frequency [Hz]</span>
+a = input(<span class="string">"Enter flow rate(ul/min):"</span>); <span class="comment">%flow rate [ul/min]</span>
+t=0:1:720; <span class="comment">%time</span>
+
+phi=zeros(); <span class="comment">%first value for phase</span>
+sum1=zeros(); <span class="comment">%first value for sum</span>
+
+subplot(2,1,1);
+
+<span class="keyword">for</span> i=1:n
+    phi(i,:)= (i-1)*360/n; <span class="comment">%phase shift in degrees (360&deg;=2*pi)</span>
+
+    sum1=a*sind(f*t-phi); <span class="comment">%calculation of sum with varying phases</span>
+    sum1(sum1&lt;0)=0; <span class="comment">%HWR part, negative values are converted into zero</span>
+    plot(t,sum1(i,:),<span class="string">'linewidth'</span>,2) <span class="comment">%plotting each individual pump</span>
+    hold <span class="string">on</span>
+    legend(<span class="string">"Pump with "</span> + phi + <span class="string">"&deg; phase shift"</span>,<span class="string">'FontSize'</span>,12); <span class="comment">%legends of each phase shifted pump</span>
+    lgd = legend;
+    lgd.NumColumns = 5;
+
+    out=sum(sum1,1); <span class="comment">%sum1 has n rows, they are converted into one row array as a summation</span>
+    out_avg=mean(out);
+    out_rms=rms(out);
+    out_max=max(out);
+    ff_out=out_rms./out_avg;
+    rf_out=real(sqrt((ff_out).^2-1));
+<span class="keyword">end</span>
+
+plot(t,out,<span class="string">'k--'</span>,<span class="string">'DisplayName'</span>,<span class="string">'Sum'</span>,<span class="string">'linewidth'</span>,3)
+hold <span class="string">off</span>
+
+title(<span class="string">"Multi-phase rectification with phase shifted parallel pumps, "</span> + n + <span class="string">" pump(s)"</span>,<span class="string">'FontSize'</span>,24);
+xlabel(<span class="string">'Phase (&deg;)'</span>,<span class="string">'FontSize'</span>,20);
+ylabel(<span class="string">'Flow rate (\mul/min)'</span>,<span class="string">'FontSize'</span>,20);
+set(gca,<span class="string">'FontSize'</span>,18)
+axis([xlim 0 720]); <span class="comment">%dependent on t value</span>
+axis([ylim -1 (a+(a*n)/3)]); <span class="comment">%maximum y value is dependent on a and n values</span>
+grid <span class="string">on</span>
+grid <span class="string">minor</span>
+hold <span class="string">on</span>
+
+subplot(2,1,2);
+
+Qavg(n) = out_avg
+Qrms(n) = out_rms
+Qmax(n) = out_max
+RF(n)= rf_out
+
+title(<span class="string">'Q_A_V_G, Q_R_M_S, and RF_f_l comparison for different rectification levels'</span>,<span class="string">'FontSize'</span>,24)
+xlabel(<span class="string">'Rectification level'</span>,<span class="string">'FontSize'</span>,20)
+
+yyaxis <span class="string">left</span>
+plot(n,Qavg(n),<span class="string">'k-o'</span>,n,Qrms(n),<span class="string">'k-square'</span>,n,Qmax(n),<span class="string">'k-^'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'k'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'linewidth'</span>,1.5)
+
+ylabel(<span class="string">'Flow Rate (\mul/min)'</span>,<span class="string">'FontSize'</span>,20)
+set(gca,<span class="string">'FontSize'</span>,18)
+axis([xlim 0.5 n+1]);
+axis([ylim -1 (a+(a*n)/3)]);
+hold <span class="string">on</span>
+yyaxis <span class="string">right</span>
+plot(n,RF(n),<span class="string">'r-v'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,8,<span class="string">'linewidth'</span>,1.5)
+ylabel (<span class="string">'Fluidic Ripple Factor'</span>,<span class="string">'FontSize'</span>,20)
+axis([xlim 0.5 n+1]);
+axis([ylim 0 1.5]);
+grid <span class="string">on</span>
+grid <span class="string">minor</span>
+left_color = [0 0 0];
+right_color = [1 0 0];
+<span class="comment">% set(figure,'defaultAxesColorOrder',[left_color; right_color]);</span>
+
+hold <span class="string">on</span>
+legend({<span class="string">'Q_a_v_g'</span>, <span class="string">'Q_r_m_s'</span>, <span class="string">'Q_m_a_x'</span>, <span class="string">'RF_f_l'</span>},<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>,<span class="string">'Location'</span>,<span class="string">'northwest'</span>,<span class="string">'FontSize'</span>,18)
+clear <span class="string">phi</span>
+</pre><pre class="codeoutput error">Error using input
+Cannot call INPUT from EVALC.
+
+Error in HWR_sinewave_withfrequency_091122 (line 2)
+n = input("Enter pump amount:");
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+n = input("Enter pump amount:");
+f=1; %frequency [Hz]
+a = input("Enter flow rate(ul/min):"); %flow rate [ul/min]
+t=0:1:720; %time
+
+phi=zeros(); %first value for phase
+sum1=zeros(); %first value for sum
+
+subplot(2,1,1);
+
+for i=1:n
+    phi(i,:)= (i-1)*360/n; %phase shift in degrees (360°=2*pi)
+
+    sum1=a*sind(f*t-phi); %calculation of sum with varying phases
+    sum1(sum1<0)=0; %HWR part, negative values are converted into zero
+    plot(t,sum1(i,:),'linewidth',2) %plotting each individual pump
+    hold on
+    legend("Pump with " + phi + "° phase shift",'FontSize',12); %legends of each phase shifted pump
+    lgd = legend;
+    lgd.NumColumns = 5;
+
+    out=sum(sum1,1); %sum1 has n rows, they are converted into one row array as a summation
+    out_avg=mean(out);
+    out_rms=rms(out);
+    out_max=max(out);
+    ff_out=out_rms./out_avg;
+    rf_out=real(sqrt((ff_out).^2-1));
+end
+
+plot(t,out,'kREPLACE_WITH_DASH_DASH','DisplayName','Sum','linewidth',3)
+hold off
+
+title("Multi-phase rectification with phase shifted parallel pumps, " + n + " pump(s)",'FontSize',24);
+xlabel('Phase (°)','FontSize',20);
+ylabel('Flow rate (\mul/min)','FontSize',20);
+set(gca,'FontSize',18)
+axis([xlim 0 720]); %dependent on t value
+axis([ylim -1 (a+(a*n)/3)]); %maximum y value is dependent on a and n values
+grid on
+grid minor
+hold on
+
+subplot(2,1,2);
+
+Qavg(n) = out_avg
+Qrms(n) = out_rms
+Qmax(n) = out_max
+RF(n)= rf_out
+
+title('Q_A_V_G, Q_R_M_S, and RF_f_l comparison for different rectification levels','FontSize',24)
+xlabel('Rectification level','FontSize',20)
+
+yyaxis left
+plot(n,Qavg(n),'k-o',n,Qrms(n),'k-square',n,Qmax(n),'k-^','MarkerFaceColor','k','MarkerSize',8,'linewidth',1.5)
+
+ylabel('Flow Rate (\mul/min)','FontSize',20)
+set(gca,'FontSize',18)
+axis([xlim 0.5 n+1]);
+axis([ylim -1 (a+(a*n)/3)]);
+hold on
+yyaxis right
+plot(n,RF(n),'r-v','MarkerFaceColor','r','MarkerSize',8,'linewidth',1.5)
+ylabel ('Fluidic Ripple Factor','FontSize',20)
+axis([xlim 0.5 n+1]);
+axis([ylim 0 1.5]);
+grid on
+grid minor
+left_color = [0 0 0];
+right_color = [1 0 0];
+% set(figure,'defaultAxesColorOrder',[left_color; right_color]);
+
+hold on
+legend({'Q_a_v_g', 'Q_r_m_s', 'Q_m_a_x', 'RF_f_l'},'Orientation','horizontal','Location','northwest','FontSize',18)
+clear phi
+
+##### SOURCE END #####
+--></body></html>
